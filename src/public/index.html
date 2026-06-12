@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Docker + Redis</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --success: #22c55e;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 550px;
+            padding: 20px;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            border: 1px solid #334155;
+        }
+        .icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+        h1 {
+            font-size: 1.8rem;
+            margin: 10px 0;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+        }
+        .counter-box {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 35px;
+            box-shadow: inset 0 2px 4px 0 rgba(255, 255, 255, 0.06);
+        }
+        .counter-label {
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: #bae6fd;
+            margin-bottom: 5px;
+        }
+        .counter-value {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1;
+            color: #ffffff;
+        }
+        .tech-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #0f172a;
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent);
+            border: 1px solid #1e293b;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--success);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px var(--success);
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <span class="icon">🚀</span>
+            <h1>Infraestrutura Docker com Sucesso</h1>
+            <p class="subtitle">Sistemas Operacionais — Trabalho Prático</p>
+            
+            <div class="counter-box">
+                <div class="counter-label">Total de Acessos Registrados</div>
+                <div class="counter-value">{{visitas}}</div>
+            </div>
+            
+            <div class="tech-badge">
+                <span class="dot"></span>
+                Comunicação Ativa: Node.js ⇄ Redis
+            </div>
+        </div>
+    </div>
+</body>
+</html>

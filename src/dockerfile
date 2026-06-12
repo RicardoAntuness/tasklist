@@ -1,34 +1,28 @@
-# Usa a versão 18 LTS (Long Term Support) por ser estável e segura para produção.
-# A variante 'alpine' foi escolhida por ser uma imagem Linux extremamente leve (~50MB), 
-# o que reduz o tamanho final do container, economiza recursos e diminui a superfície de ataques.
+# Node 18 Alpine: imagem oficial LTS com footprint reduzido (~50MB vs ~900MB full).
+# Garante a estabilidade de uma versão de suporte a longo prazo e diminui 
+# drasticamente o tamanho final do container e a superfície de vulnerabilidades.
 FROM node:18-alpine
 
-# Define o diretório de trabalho padrão dentro do container.
-# Isso evita que os arquivos da aplicação fiquem espalhados na raiz do sistema operacional
-# e garante que todos os comandos subsequentes (RUN, COPY, CMD) sejam executados dentro de /app.
+# Define o diretório padrão para os comandos seguintes dentro do container.
+# Cria um espaço isolado (/app), evitando conflitos com arquivos do sistema base.
 WORKDIR /app
 
-# Copia primeiro apenas os arquivos de manifesto de dependências (package.json e package-lock.json).
-# Essa separação é uma estratégia para otimizar o uso do cache do Docker: 
-# o Docker só vai reconstruir a camada do 'npm install' se as dependências mudarem.
-# Se mudarmos apenas o código da aplicação, essa camada lenta do npm é reaproveitada do cache.
+# Copia apenas o manifesto primeiro - permite que o Docker reutilize o cache
+# das dependências quando só o código-fonte muda.
+# Isso otimiza o tempo de build pois pula a instalação caso o package.json não mude.
 COPY package*.json ./
 
-# Executa a instalação das dependências declaradas no package.json dentro da imagem.
+# Instala as dependências necessárias de forma isolada dentro da camada do container.
 RUN npm install
 
-# Só agora copia o restante do código-fonte (server.js, etc) para dentro do container.
-# Como o código muda com mais frequência que as dependências, colocamos este passo no final
-# para não invalidar o cache da instalação do npm atoa.
+# Copia o restante do código-fonte (incluindo server.js e a pasta public/).
+# Fica após o npm install para que alterações no HTML ou JS não invalidem o cache do RUN.
 COPY . .
 
-# Serve apenas como documentação técnica. 
-# Informa aos desenvolvedores e ferramentas de orquestração que a aplicação lá dentro 
-# escuta tráfego na porta 3000. O EXPOSE sozinho não publica a porta no host (isso é feito no compose).
+# Documenta a porta usada pela aplicação (não abre a porta por si só).
+# Atua como metadado para o desenvolvedor e para o mapeamento do Docker Compose.
 EXPOSE 3000
 
-# Define o comando padrão que será executado quando o container iniciar.
-# A escolha por CMD (em vez de ENTRYPOINT) foi feita porque o CMD permite que o comando
-# seja facilmente substituído na linha de comando em runtime (ex: caso queiramos rodar um bash para debug),
-# enquanto o ENTRYPOINT é mais rígido.
+# CMD é substituível em runtime; ENTRYPOINT seria fixo - escolha consciente.
+# Utiliza o script "start" mapeado no package.json para iniciar o servidor Node.js.
 CMD ["npm", "start"]
